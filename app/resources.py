@@ -4,32 +4,32 @@ from .model import Course ,Student
 from .extensions import db
 
 
-ns= Namespace("api") # instatiating namespace that takes argument as an URL 
+ns= Namespace("api") 
 
 
 @ns.route("/hello")
-class Hello(Resource): # hello class is going to inherit from Resource 
-    def get(self): # in this clas  u define all the HTTP method that u want to support 
-        return {"hello": "restx"}  # python dictonary which is jason serializable 
+class Hello(Resource):
+    def get(self): 
+        return {"hello": "restx"}  
     
 @ns.route("/courses")  
 class CourseListAPI(Resource):
-    @ns.marshal_list_with(course_model) # this line of code takes the return type and convert into dictonary or json serializable
+    @ns.marshal_list_with(course_model) 
     def get(self):
-        return Course.query.all() # class restx does not know how to convert the reslt of query
-                                  # that can be pass as api response 
-    # method to create/ to add the course to data base
+        return Course.query.all() 
+                                  
+    
     @ns.expect(course_input_model)
     @ns.marshal_with(course_model)
     def post(self):
-        print(ns.payload) # to get the information, payload has the information so it is 
-                        # use to create the database 
+        print(ns.payload) 
+                      
         course= Course(name=ns.payload["name"])
         db.session.add(course)
         db.session.commit()
         return course ,201    
     
-@ns.route("/course/<int:id>")  # this route is to handle with single entity
+@ns.route("/course/<int:id>")  
 class CourseAPI(Resource):
     @ns.marshal_with(course_model)
     def get(self, id):
@@ -38,24 +38,24 @@ class CourseAPI(Resource):
     
     @ns.expect(course_input_model)
     @ns.marshal_with(course_model)
-    def put(self, id):  # method to update the single entity 
+    def put(self, id):   
         course=Course.query.get(id)
         course.name= ns.payload["name"]
-        # student.cousre_id= ns.payload["ousre_id"]
+        
         db.session.commit()
         return course 
     def delete(self,id):
         course= Course.query.get(id)
         db.session.delete(course)
         db.session.commit()
-        return { },204 # returning list of remaining students
+        return { },204 
     
 @ns.route("/student")
 class StudentListAPI(Resource):
-    @ns.marshal_list_with(student_model) # this line of code takes the return type and convert into dictonary or json serializable
+    @ns.marshal_list_with(student_model) 
     def get(self):
-        return Student.query.all() # class restx does not know how to convert the reslt of query
-                                  # that can be pass as api response  
+        return Student.query.all() 
+                                  
     @ns.expect(student_input_model)
     @ns.marshal_with(student_model)
     def post(self):
@@ -72,14 +72,14 @@ class StudentAPI(Resource):
 
     @ns.expect(student_input_model)
     @ns.marshal_with(student_model)
-    def put(self, id):  # method to update the single entity 
+    def put(self, id):   
         student=Student.query.get(id)
         student.name= ns.payload["name"]
-        # student.cousre_id= ns.payload["ousre_id"]
+        
         db.session.commit()
         return student 
     def delete(self,id):
         student= Student.query.get(id)
         db.session.delete(student)
         db.session.commit()
-        return { },204 # returning list of remaining students
+        return { },204 

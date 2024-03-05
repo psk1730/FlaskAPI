@@ -1,17 +1,17 @@
-# these molse are basically creted to define the structure of response of the api
+
 from flask_restx import fields
 from .extensions import api
 
 
 
-student_model= api.model("Student", {    # now this will be the structure of the Student end Point
+student_model= api.model("Student", {   
     "id": fields.Integer,
     "name": fields.String,
     # "course": fields.Nested(course_model)
 })
 
 
-course_model= api.model("Course", {    # now this will be the structure of the Course end Point
+course_model= api.model("Course", {    
     "id": fields.Integer,
     "name": fields.String, 
     "student": fields.List(fields.Nested(student_model))
